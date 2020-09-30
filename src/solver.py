@@ -14,6 +14,9 @@ class SudokuSolver:
         :param grid: Une grille de Sudoku
         :type grid: SudokuGrid
         """
+        self.grid = grid
+        self.possiblesChoices =[]
+
         raise NotImplementedError()
 
     def reduce_all_domains(self):
@@ -22,7 +25,26 @@ class SudokuSolver:
         et élimine toutes les valeurs impossibles pour chaque case vide.
         *Indication: Vous pouvez utiliser les fonction ``get_row``, ``get_col`` et ``get_region`` de la grille*
         """
-        raise NotImplementedError()
+
+        for i in range(9):
+            for j in range(9):
+
+                if self.grid[i][j] == 0:
+
+                    sList = set(range(1, 10))
+                    possibleLines = set(self.grid.get_row(i))
+                    possibleCol = set(self.grid.get_col(j))
+                    possibleReg = set(self.grid.get_region(i,j))
+                    listPossibles = sList - possibleCol - possibleLines - possibleReg
+
+                    if len(listPossibles) == 0:
+                        print("Pas de Possibilités pour ["i"]["j"]")
+                    else:
+                        self.possiblesChoices.append(((i,j),list(listPossibles)))
+
+
+
+       # raise NotImplementedError()
 
     def reduce_domains(self, last_i, last_j, last_v):
         """À COMPLÉTER
@@ -36,7 +58,27 @@ class SudokuSolver:
         :type last_j: int
         :type last_v: int
         """
-        raise NotImplementedError()
+
+        for case in self.possiblesChoices:
+
+            coini = case[0][0] // 3
+            coinj = case[0][1] // 3
+            regionCase = (coini, coinj)
+            coini_lastCase = last_i // 3
+            coinj_lastCase = last_j // 3
+            region_lastCase = (coini_lastCase, coinj_lastCase)
+
+            if last_v in case[1]:
+                if (
+                case[0][0] == last_i or case[0][1] == last_j or (regionCase == region_lastCase)):
+                    case[1].remove(last_v)
+
+
+
+
+
+
+        #raise NotImplementedError()
 
     def commit_one_var(self):
         """À COMPLÉTER
@@ -47,7 +89,24 @@ class SudokuSolver:
         ou ``None`` si aucune case n'a pu être remplie.
         :rtype: tuple of int or None
         """
-        raise NotImplementedError()
+        tupleState=()
+
+        for case in self.possiblesChoices:
+            if len(case[1]) == 1:
+                self.grid[case[0][0]][case[0][1]]= case[1]
+                tupleState.append(case[0][0], case[0][1], case[1])
+                print("Case trouvée avec une seule solution")
+                return tupleState
+                break
+            else:
+                continue
+
+        return None
+
+
+
+
+        #raise NotImplementedError()
 
     def solve_step(self):
         """À COMPLÉTER
@@ -59,6 +118,16 @@ class SudokuSolver:
         il est aussi possible de vérifier s'il ne reste plus qu'une seule position valide pour une certaine valeur
         sur chaque ligne, chaque colonne et dans chaque région*
         """
+        continuer = True
+        while continuer:
+            caseUneSeulePossibilite = self.commit_one_var()
+            if caseUneSeulePossibilite is not None:
+               self.grid[caseUneSeulePossibilite[0]][caseUneSeulePossibilite[1]] = caseUneSeulePossibilite[2]
+                self.reduce_domains(caseUneSeulePossibilite[0], caseUneSeulePossibilite[1], caseUneSeulePossibilite[2])
+      #J'EN AI MARRE
+
+
+
         raise NotImplementedError()
 
     def is_valid(self):
@@ -68,7 +137,17 @@ class SudokuSolver:
         :return: Un booléen indiquant si la solution partielle actuelle peut encore mener à une solution valide
         :rtype: bool
         """
-        raise NotImplementedError()
+        for case in self.possiblesChoices:
+            if len(case[1]) == 0:
+                return False
+                print("Sudoku non solvable")
+                break
+            else:
+                continue
+
+        return True
+
+        #raise NotImplementedError()
 
     def is_solved(self):
         """À COMPLÉTER
@@ -77,7 +156,13 @@ class SudokuSolver:
         :return: Un booléen indiquant si la solution actuelle est complète.
         :rtype: bool
         """
-        raise NotImplementedError()
+
+        if len(self.grid.get_empty_pos()) == 0:
+            return True
+        else:
+            return False
+
+        #raise NotImplementedError()
 
     def branch(self):
         """À COMPLÉTER
@@ -92,6 +177,9 @@ class SudokuSolver:
         :return: Une liste de sous-problèmes ayant chacun une valeur différente pour la variable choisie
         :rtype: list of SudokuSolver
         """
+
+
+
         raise NotImplementedError()
 
     def solve(self):
@@ -107,4 +195,7 @@ class SudokuSolver:
         (ou None si pas de solution)
         :rtype: SudokuGrid or None
         """
+
+
+
         raise NotImplementedError()
