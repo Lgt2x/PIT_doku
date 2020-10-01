@@ -1,4 +1,4 @@
-#-*-coding: utf8-*-
+# -*-coding: utf8-*-
 
 class SudokuSolver:
     """Cette classe permet d'explorer les solutions d'une grille de Sudoku pour la résoudre.
@@ -15,7 +15,7 @@ class SudokuSolver:
         :type grid: SudokuGrid
         """
         self.grid = grid
-        self.possiblesChoices =[]
+        self.possiblesChoices = []
 
         raise NotImplementedError()
 
@@ -34,17 +34,15 @@ class SudokuSolver:
                     sList = set(range(1, 10))
                     possibleLines = set(self.grid.get_row(i))
                     possibleCol = set(self.grid.get_col(j))
-                    possibleReg = set(self.grid.get_region(i,j))
+                    possibleReg = set(self.grid.get_region(i, j))
                     listPossibles = sList - possibleCol - possibleLines - possibleReg
 
                     if len(listPossibles) == 0:
-                        print("Pas de Possibilités pour ["+i+"]["+j+"]")
+                        print("Pas de Possibilités pour [" + str(i) + "][" + str(j) + "]")
                     else:
-                        self.possiblesChoices.append(((i,j),list(listPossibles)))
+                        self.possiblesChoices.append(((i, j), list(listPossibles)))
 
-
-
-       # raise NotImplementedError()
+    # raise NotImplementedError()
 
     def reduce_domains(self, last_i, last_j, last_v):
         """À COMPLÉTER
@@ -70,15 +68,10 @@ class SudokuSolver:
 
             if last_v in case[1]:
                 if (
-                case[0][0] == last_i or case[0][1] == last_j or (regionCase == region_lastCase)):
+                        case[0][0] == last_i or case[0][1] == last_j or (regionCase == region_lastCase)):
                     case[1].remove(last_v)
 
-
-
-
-
-
-        #raise NotImplementedError()
+        # raise NotImplementedError()
 
     def commit_one_var(self):
         """À COMPLÉTER
@@ -89,24 +82,16 @@ class SudokuSolver:
         ou ``None`` si aucune case n'a pu être remplie.
         :rtype: tuple of int or None
         """
-        tupleState=()
 
         for case in self.possiblesChoices:
             if len(case[1]) == 1:
-                self.grid[case[0][0]][case[0][1]]= case[1]
-                tupleState.append(case[0][0], case[0][1], case[1])
+                self.grid[case[0][0]][case[0][1]] = case[1]
                 print("Case trouvée avec une seule solution")
-                return tupleState
-                break
-            else:
-                continue
+                return case[0][0], case[0][1], case[1]
 
         return None
 
-
-
-
-        #raise NotImplementedError()
+        # raise NotImplementedError()
 
     def solve_step(self):
         """À COMPLÉTER
@@ -124,9 +109,7 @@ class SudokuSolver:
             if caseUneSeulePossibilite is not None:
                 self.grid[caseUneSeulePossibilite[0]][caseUneSeulePossibilite[1]] = caseUneSeulePossibilite[2]
                 self.reduce_domains(caseUneSeulePossibilite[0], caseUneSeulePossibilite[1], caseUneSeulePossibilite[2])
-      #J'EN AI MARRE
-
-
+        # J'EN AI MARRE
 
         raise NotImplementedError()
 
@@ -139,15 +122,12 @@ class SudokuSolver:
         """
         for case in self.possiblesChoices:
             if len(case[1]) == 0:
-                return False
                 print("Sudoku non solvable")
-                break
-            else:
-                continue
+                return False
 
         return True
 
-        #raise NotImplementedError()
+        # raise NotImplementedError()
 
     def is_solved(self):
         """À COMPLÉTER
@@ -162,7 +142,7 @@ class SudokuSolver:
         else:
             return False
 
-        #raise NotImplementedError()
+        # raise NotImplementedError()
 
     def branch(self):
         """À COMPLÉTER
@@ -177,8 +157,6 @@ class SudokuSolver:
         :return: Une liste de sous-problèmes ayant chacun une valeur différente pour la variable choisie
         :rtype: list of SudokuSolver
         """
-
-
 
         raise NotImplementedError()
 
