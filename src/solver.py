@@ -93,7 +93,7 @@ class SudokuSolver:
 
         # raise NotImplementedError()
 
-    def solve_step(self):
+    def solve_step(self): #ok je pense
         """À COMPLÉTER
         Cette méthode alterne entre l'affectation de case pour lesquelles il n'y a plus qu'une possibilité
         et l'élimination des nouvelles valeurs impossibles pour les autres cases concernées.
@@ -104,14 +104,21 @@ class SudokuSolver:
         sur chaque ligne, chaque colonne et dans chaque région*
         """
         continuer = True
+        alternance = True
         while continuer:
             caseUneSeulePossibilite = self.commit_one_var()
             if caseUneSeulePossibilite is not None:
-                self.grid[caseUneSeulePossibilite[0]][caseUneSeulePossibilite[1]] = caseUneSeulePossibilite[2]
-                self.reduce_domains(caseUneSeulePossibilite[0], caseUneSeulePossibilite[1], caseUneSeulePossibilite[2])
+                if alternance:
+                    self.grid[caseUneSeulePossibilite[0]][caseUneSeulePossibilite[1]] = caseUneSeulePossibilite[2]
+                    alternance = False
+                else:
+                    self.reduce_domains(caseUneSeulePossibilite[0], caseUneSeulePossibilite[1], caseUneSeulePossibilite[2])
+                    alternance = True
+            else:
+                continuer = False
         # J'EN AI MARRE
 
-        raise NotImplementedError()
+        #raise NotImplementedError()
 
     def is_valid(self):
         """À COMPLÉTER
@@ -160,7 +167,7 @@ class SudokuSolver:
 
         raise NotImplementedError()
 
-    def solve(self):
+    def solve(self): #ok je pense
         """
         Cette méthode implémente la fonction principale de la programmation par contrainte.
         Elle cherche d'abord à affiner au mieux la solution partielle actuelle par un appel à ``solve_step``.
@@ -173,5 +180,14 @@ class SudokuSolver:
         (ou None si pas de solution)
         :rtype: SudokuGrid or None
         """
+        self.solve_step()
+        if self.is_solved():
+            return self.grid
+        elif not self.is_valid():
+            return None
+        else:
+            list = self.branch()
+            for i in list:
+                i.solve()
 
-        raise NotImplementedError()
+        #raise NotImplementedError()

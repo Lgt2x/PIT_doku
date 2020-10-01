@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from grid import SudokuGrid
-from solver import SudokuSolver
+from src import grid
+from src import solver
 import os.path
 import time
 import multiprocessing
@@ -9,12 +9,12 @@ import multiprocessing
 
 def solve_all(running_times):
     for l in range(1, 245):
-        g = SudokuGrid.from_file(os.path.join(os.path.dirname(__file__), "..", "sudoku_db.txt", l)
+        g = grid.SudokuGrid.from_file(os.path.join(os.path.dirname(__file__), "..", "sudoku_db.txt"), l)
         start = time.monotonic()
-        solver = SudokuSolver(g)
-        solver.solve()
+        Solver = solver.SudokuSolver(g)
+        Solver.solve()
         running_times.append(1000 * (time.monotonic() - start))
-        print("\r[{: <40}] ({:.0%})".format('='*int(40 * l / 244), l / 244), end='')
+        print("\r[{: <40}] ({:.0%})".format('=' * int(40 * l / 244), l / 244), end='')
 
 
 if __name__ == "__main__":
