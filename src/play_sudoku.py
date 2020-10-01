@@ -1,27 +1,28 @@
 from grid import *
 from solver import *
-import sys
+
 
 def play():
-    askPlayer = input("Do You wanna Start Playing ?: Yes or Not")
-    if askPlayer == "Yes":
-        askPlayerModel = input("Do You wanna play with your own grid ?: Yes or Not")
-        if askPlayerModel == "Yes":
-            NewSudoku = SudokuGrid.from_stdin()
-        elif askPlayerModel == "No":
-            askFile = input("Saisir Un fichier Source :")
-            askLine = input("Saisir la ligne génératrice de la grille:")
-            NewSudoku = SudokuGrid.from_file(askFile, askLine)
+    ask_player = input("Do You wanna Start Playing ?: Yes or Not")
+    if ask_player == "Yes":
+        ask_playermodel = input("Do You wanna play with your own grid ?: Yes or Not")
+        if ask_playermodel == "Yes":
+            new_sudoku = SudokuGrid.from_stdin()
+        elif ask_playermodel == "No":
+            ask_file = input("Saisir Un fichier Source :")
+            ask_line = input("Saisir la ligne génératrice de la grille:")
+            new_sudoku = SudokuGrid.from_file(ask_file, ask_line)
         else:
             print("Entrer Yes or No")
 
-    return NewSudoku
+    return new_sudoku
 
-def run(Sudoku):
 
-    while len(Sudoku.get_empty_pos()) != 0:
+def run(sudoku):
 
-        print(Sudoku)
+    while len(sudoku.get_empty_pos()) != 0:
+
+        print(sudoku)
 
         row = input("Ligne : ")
         col = input("Colonne : ")
@@ -36,7 +37,7 @@ def run(Sudoku):
             if not (0 <= row <= 8 and 0 <= col <= 8 and 1 <= val <= 9):
                 input_ok = False
                 print("Colonne et Ligne doivent être compris entre 0 et 8 et La Valeur entre 1 et 9.")
-            if Sudoku.grid[row][col] != 0:
+            if sudoku.grid[row][col] != 0:
                 input_ok = False
                 print("Cette case possède déjà une valeur.")
         else:
@@ -47,27 +48,16 @@ def run(Sudoku):
             print("mauvais input")
             continue
 
-        Sudoku.write(row, col, val)
+        sudoku.write(row, col, val)
 
-        Solve = input("Voulez-vous resoudre le game : Yes or Not")
-        if Solve == "Yes":
-            Solver = SudokuSolver(Sudoku)
-            Solver.solve()
-            print(Sudoku)
-
+        solve = input("Voulez-vous resoudre le game : Yes or Not")
+        if solve == "Yes":
+            solver = solver(sudoku)
+            solver.solve()
+            print(sudoku)
 
 
 if __name__ == '__main__':
 
     NewGame = play()
     run(NewGame)
-
-
-
-
-
-
-
-
-
-

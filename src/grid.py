@@ -98,9 +98,18 @@ class SudokuGrid:
         :return: La liste des valeurs présentes à la colonne donnée
         :rtype: list of int
         """
-        return [self.grid[3 * reg_row][3 * reg_col + i] for i in range(3)] + [
-            self.grid[3 * reg_row + 1][3 * reg_col + i] for i in range(3)] + [
-                   self.grid[3 * reg_row + 2][3 * reg_col + i] for i in range(3)]
+
+        for i in range(len(self.grid)):
+            for j in range(len(self.grid[0])):
+                s = set()
+                coin_j = (reg_col // 3) * 3
+                coin_i = (reg_row // 3) * 3
+
+                for ii in range(coin_i, coin_i + 3):
+                    for jj in range(coin_j, coin_j + 3):
+                        if ii != i and jj != j and self.grid[ii][jj] != 0:
+                            s.add(self.grid[ii][jj])
+        return s
 
     def get_empty_pos(self):
         """À COMPLÉTER!
