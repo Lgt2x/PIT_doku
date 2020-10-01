@@ -3,17 +3,24 @@ from solver import *
 
 
 def play():
-    ask_player = input("Do You wanna Start Playing ?: Yes or Not")
-    if ask_player == "Yes":
-        ask_playermodel = input("Do You wanna play with your own grid ?: Yes or Not")
-        if ask_playermodel == "Yes":
-            new_sudoku = SudokuGrid.from_stdin()
-        elif ask_playermodel == "No":
-            ask_file = input("Saisir Un fichier Source :")
-            ask_line = input("Saisir la ligne génératrice de la grille:")
-            new_sudoku = SudokuGrid.from_file(ask_file, ask_line)
+    ask_player = input("Do You wanna Start Playing ?: Yes or No \n")
+    continuer = True
+    while continuer:
+        if ask_player == "Yes":
+            ask_playermodel = input("Do You wanna play with your own grid ?: Yes or No \n")
+            if ask_playermodel == "Yes":
+                new_sudoku = SudokuGrid.from_stdin()
+                continuer = False
+            elif ask_playermodel == "No":
+                ask_file = input("Saisir Un fichier Source : \n")
+                ask_line = input("Saisir la ligne génératrice de la grille: \n")
+                new_sudoku = SudokuGrid.from_file(ask_file, ask_line)
+                continuer = False
+        elif ask_player == "No":
+            exit()
         else:
-            print("Entrer Yes or No")
+            ask_player = input("Do You wanna Start Playing ?: Yes or No \n")
+
 
     return new_sudoku
 
@@ -50,7 +57,7 @@ def run(sudoku):
 
         sudoku.write(row, col, val)
 
-        solve = input("Voulez-vous resoudre le game : Yes or Not")
+        solve = input("Voulez-vous resoudre le game : Yes or No \n")
         if solve == "Yes":
             solver = solver(sudoku)
             solver.solve()
@@ -61,3 +68,4 @@ if __name__ == '__main__':
 
     NewGame = play()
     run(NewGame)
+
