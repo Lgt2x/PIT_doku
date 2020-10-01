@@ -16,8 +16,9 @@ class SudokuSolver:
         """
         self.grid = grid
         self.possiblesChoices = []
+        self.reduce_all_domains()
 
-        raise NotImplementedError()
+        #raise NotImplementedError()
 
     def reduce_all_domains(self):
         """À COMPLÉTER
@@ -188,6 +189,9 @@ class SudokuSolver:
         else:
             list = self.branch()
             for i in list:
-                i.solve()
+                temp = i.solve()
+                if temp is not None:
+                    return temp
+
 
         #raise NotImplementedError()
