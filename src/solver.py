@@ -38,7 +38,7 @@ class SudokuSolver:
                     listPossibles = sList - possibleCol - possibleLines - possibleReg
 
                     if len(listPossibles) == 0:
-                        print("Pas de Possibilités pour ["i"]["j"]")
+                        print("Pas de Possibilités pour ["+i+"]["+j+"]")
                     else:
                         self.possiblesChoices.append(((i,j),list(listPossibles)))
 
@@ -122,7 +122,7 @@ class SudokuSolver:
         while continuer:
             caseUneSeulePossibilite = self.commit_one_var()
             if caseUneSeulePossibilite is not None:
-               self.grid[caseUneSeulePossibilite[0]][caseUneSeulePossibilite[1]] = caseUneSeulePossibilite[2]
+                self.grid[caseUneSeulePossibilite[0]][caseUneSeulePossibilite[1]] = caseUneSeulePossibilite[2]
                 self.reduce_domains(caseUneSeulePossibilite[0], caseUneSeulePossibilite[1], caseUneSeulePossibilite[2])
       #J'EN AI MARRE
 
@@ -195,7 +195,5 @@ class SudokuSolver:
         (ou None si pas de solution)
         :rtype: SudokuGrid or None
         """
-
-
 
         raise NotImplementedError()
