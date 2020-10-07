@@ -1,21 +1,21 @@
-from grid import *
-from solver import *
+from grid import SudokuGrid
+from solver import SudokuSolver
 
 
 def play():
     ask_player = input("Do You wanna Start Playing ?: Yes or No \n")
-    continuer = True
-    while continuer:
+    keep_playing = True
+    while keep_playing:
         if ask_player == "Yes":
             ask_playermodel = input("Do You wanna play with your own grid ?: Yes or No \n")
             if ask_playermodel == "Yes":
                 new_sudoku = SudokuGrid.from_stdin()
-                continuer = False
+                keep_playing = False
             elif ask_playermodel == "No":
-                ask_file = input("Saisir Un fichier Source : \n")
-                ask_line = input("Saisir la ligne génératrice de la grille: \n")
+                ask_file = input("Enter a source file: \n")
+                ask_line = input("Which Line do you select for generating your grid ?: \n")
                 new_sudoku = SudokuGrid.from_file(ask_file, ask_line)
-                continuer = False
+                keep_playing = False
         elif ask_player == "No":
             exit()
         else:
@@ -31,9 +31,9 @@ def run(sudoku):
 
         print(sudoku)
 
-        row = input("Ligne : ")
-        col = input("Colonne : ")
-        val = input("Valeur : ")
+        row = input("Row : ")
+        col = input("Column : ")
+        val = input("Value : ")
 
         input_ok = True
         if row.isdigit() and col.isdigit():
@@ -43,21 +43,21 @@ def run(sudoku):
 
             if not (0 <= row <= 8 and 0 <= col <= 8 and 1 <= val <= 9):
                 input_ok = False
-                print("Colonne et Ligne doivent être compris entre 0 et 8 et La Valeur entre 1 et 9.")
+                print("Column and Line must lie between the range 0 to 8 and the value between the range 1 to 9.")
             if sudoku.grid[row][col] != 0:
                 input_ok = False
-                print("Cette case possède déjà une valeur.")
+                print("The box you selected already has a value.")
         else:
             input_ok = False
-            print("Vous n'avez pas entré des chiffres.")
+            print("You did not enter numbers.")
 
         if not input_ok:
-            print("mauvais input")
+            print("Wrong input")
             continue
 
         sudoku.write(row, col, val)
 
-        solve = input("Voulez-vous resoudre le game : Yes or No \n")
+        solve = input("Do you want to game to be resolved : Yes or No \n")
         if solve == "Yes":
             solver = solver(sudoku)
             solver.solve()

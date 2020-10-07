@@ -47,7 +47,7 @@ class SudokuGrid:
         :rtype: SudokuGrid
         """
 
-        read = input("Saisissez une grille de sudoku")
+        read = input("Enter a Sudoku Grid")
         return SudokuGrid(read)
 
     def __str__(self):
@@ -99,17 +99,17 @@ class SudokuGrid:
         :rtype: list of int
         """
 
-        for i in range(len(self.grid)):
-            for j in range(len(self.grid[0])):
-                s = set()
-                coin_j = (reg_col // 3) * 3
-                coin_i = (reg_row // 3) * 3
+        for row in range(len(self.grid)):
+            for col in range(len(self.grid[0])):
+                numbers_already_in_square = set()
+                corner_col = (reg_col // 3) * 3
+                corner_row = (reg_row // 3) * 3
 
-                for ii in range(coin_i, coin_i + 3):
-                    for jj in range(coin_j, coin_j + 3):
-                        if ii != i and jj != j and self.grid[ii][jj] != 0:
-                            s.add(self.grid[ii][jj])
-        return s
+                for row_square in range(corner_row, corner_row + 3):
+                    for col_square in range(corner_col, corner_col + 3):
+                        if row_square != row and col_square != col and self.grid[row_square][col_square] != 0:
+                            numbers_already_in_square.add(self.grid[row_square][col_square])
+        return numbers_already_in_square
 
     def get_empty_pos(self):
         """À COMPLÉTER!

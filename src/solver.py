@@ -1,4 +1,4 @@
-from grid import *
+from grid import SudokuGrid
 
 
 class SudokuSolver:
@@ -6,7 +6,7 @@ class SudokuSolver:
     def __init__(self, grid_game):
 
         self.grid = grid_game
-        self.possibles_choices = []
+        self.possible_choices = []
         self.reduce_all_domains()
 
         # raise NotImplementedError()
@@ -27,9 +27,9 @@ class SudokuSolver:
                     list_possibles = s_list - possible_col - possible_lines - possible_reg
 
                     if len(list_possibles) == 0:
-                        print("Pas de Possibilités pour [", cases_vides[i][0], "][", cases_vides[i][1], "]")
+                        print("No Possibilities for [", cases_vides[i][0], "][", cases_vides[i][1], "]")
                     else:
-                        self.possibles_choices.append(((cases_vides[i][0], cases_vides[i][1]), list(list_possibles)))
+                        self.possible_choices.append(((cases_vides[i][0], cases_vides[i][1]), list(list_possibles)))
 
     def reduce_domains(self, last_i, last_j, last_v):
         """À COMPLÉTER
@@ -43,7 +43,7 @@ class SudokuSolver:
                :type last_j: int
                :type last_v: int
                """
-        for case in self.possibles_choices:
+        for case in self.possible_choices:
 
             coin_i = case[0][0] // 3
             coin_j = case[0][1] // 3
@@ -65,13 +65,10 @@ class SudokuSolver:
                ou ``None`` si aucune case n'a pu être remplie.
                :rtype: tuple of int or None
                """
-        for case in self.possibles_choices:
+        for case in self.possible_choices:
             if len(case[1]) == 1:
                 self.grid[case[0][0]][case[0][1]] = case[1]
-                tuple_state = (case[0][0], case[0][1], case[1])
-                return tuple_state
-            else:
-                continue
+                return (case[0][0], case[0][1], case[1])
 
         return None
 
@@ -102,11 +99,9 @@ class SudokuSolver:
                :return: Un booléen indiquant si la solution partielle actuelle peut encore mener à une solution valide
                :rtype: bool
                """
-        for case in self.possibles_choices:
+        for case in self.possible_choices:
             if len(case[1]) == 0:
                 return False
-            else:
-                continue
 
         return True
 
@@ -160,6 +155,5 @@ if __name__ == "__main__":
     print(solve.is_valid())
     print(solve.commit_one_var())
     print(solve.is_solved())
-
 
 
