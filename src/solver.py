@@ -18,7 +18,7 @@ class SudokuSolver:
         self.possiblesChoices = []
         self.reduce_all_domains()
 
-        #raise NotImplementedError()
+        # raise NotImplementedError()
 
     def reduce_all_domains(self):
         """À COMPLÉTER
@@ -27,21 +27,37 @@ class SudokuSolver:
         *Indication: Vous pouvez utiliser les fonction ``get_row``, ``get_col`` et ``get_region`` de la grille*
         """
 
-        for i in range(9):
-            for j in range(9):
+        vide = self.grid.get_empty_pos()
 
-                if self.grid[i][j] == 0:
+        for a in range(len(vide)):
+            i = vide[a][0]
+            j = vide[a][1]
 
-                    sList = set(range(1, 10))
-                    possibleLines = set(self.grid.get_row(i))
-                    possibleCol = set(self.grid.get_col(j))
-                    possibleReg = set(self.grid.get_region(i, j))
-                    listPossibles = sList - possibleCol - possibleLines - possibleReg
+            if i < 3:
+                reg_i = 0
+            elif i < 6:
+                reg_i = 1
+            else:
+                reg_i = 2
 
-                    if len(listPossibles) == 0:
-                        print("Pas de Possibilités pour [" + str(i) + "][" + str(j) + "]")
-                    else:
-                        self.possiblesChoices.append(((i, j), list(listPossibles)))
+            if j < 3:
+                reg_j = 0
+            elif j < 6:
+                reg_j = 1
+            else:
+                reg_j = 2
+
+            sList = set(range(1, 10))
+            possibleLines = set(self.grid.get_row(i))
+            possibleCol = set(self.grid.get_col(j))
+            possibleReg = set(self.grid.get_region(reg_i, reg_j))
+            listPossibles = list(sList - possibleCol - possibleLines - possibleReg)
+
+            if len(listPossibles) == 0:
+                print("Pas de Possibilités pour [" + str(i) + "][" + str(j) + "]")
+            else:
+                for i in range(len(listPossibles)):
+                    self.possiblesChoices.append((i, j, listPossibles))
 
     # raise NotImplementedError()
 
@@ -60,17 +76,17 @@ class SudokuSolver:
 
         for case in self.possiblesChoices:
 
-            coini = case[0][0] // 3
-            coinj = case[0][1] // 3
+            coini = case[0] // 3
+            coinj = case[1] // 3
             regionCase = (coini, coinj)
             coini_lastCase = last_i // 3
             coinj_lastCase = last_j // 3
             region_lastCase = (coini_lastCase, coinj_lastCase)
 
-            if last_v in case[1]:
+            if last_v in case[2]:
                 if (
-                        case[0][0] == last_i or case[0][1] == last_j or (regionCase == region_lastCase)):
-                    case[1].remove(last_v)
+                        case[0] == last_i or case[1] == last_j or (regionCase == region_lastCase)):
+                    case[2].remove(last_v)
 
         # raise NotImplementedError()
 
@@ -85,16 +101,18 @@ class SudokuSolver:
         """
 
         for case in self.possiblesChoices:
-            if len(case[1]) == 1:
-                self.grid[case[0][0]][case[0][1]] = case[1]
+            if len(case[2]) == 1:
+                self.grid.write(case[0], case[1], case[2])
                 print("Case trouvée avec une seule solution")
-                return case[0][0], case[0][1], case[1]
+                res = case[0], case[1], case[2]
+                self.possiblesChoices.remove(case)
+                return res
 
         return None
 
         # raise NotImplementedError()
 
-    def solve_step(self): #ok je pense
+    def solve_step(self):  # ok je pense
         """À COMPLÉTER
         Cette méthode alterne entre l'affectation de case pour lesquelles il n'y a plus qu'une possibilité
         et l'élimination des nouvelles valeurs impossibles pour les autres cases concernées.
@@ -110,16 +128,17 @@ class SudokuSolver:
             caseUneSeulePossibilite = self.commit_one_var()
             if caseUneSeulePossibilite is not None:
                 if alternance:
-                    self.grid[caseUneSeulePossibilite[0]][caseUneSeulePossibilite[1]] = caseUneSeulePossibilite[2]
+                    self.grid.write(caseUneSeulePossibilite[0], caseUneSeulePossibilite[1], caseUneSeulePossibilite[2])
                     alternance = False
                 else:
-                    self.reduce_domains(caseUneSeulePossibilite[0], caseUneSeulePossibilite[1], caseUneSeulePossibilite[2])
+                    self.reduce_domains(caseUneSeulePossibilite[0], caseUneSeulePossibilite[1],
+                                        caseUneSeulePossibilite[2])
                     alternance = True
             else:
                 continuer = False
         # J'EN AI MARRE
 
-        #raise NotImplementedError()
+        # raise NotImplementedError()
 
     def is_valid(self):
         """À COMPLÉTER
@@ -129,7 +148,7 @@ class SudokuSolver:
         :rtype: bool
         """
         for case in self.possiblesChoices:
-            if len(case[1]) == 0:
+            if len(case[2]) == 0:
                 print("Sudoku non solvable")
                 return False
 
@@ -165,10 +184,19 @@ class SudokuSolver:
         :return: Une liste de sous-problèmes ayant chacun une valeur différente pour la variable choisie
         :rtype: list of SudokuSolver
         """
+        # utiliser variable possibleChoices
+        var = SudokuSolver(self.grid)
+        res = list()
 
-        raise NotImplementedError()
+        for i in self.possiblesChoices:
+            var.grid.write(i[0], i[1], i[2])
+            if var.is_valid():
+                res.append(var)
 
-    def solve(self): #ok je pense
+        return res
+        # raise NotImplementedError()
+
+    def solve(self):  # ok je pense
         """
         Cette méthode implémente la fonction principale de la programmation par contrainte.
         Elle cherche d'abord à affiner au mieux la solution partielle actuelle par un appel à ``solve_step``.
@@ -193,5 +221,4 @@ class SudokuSolver:
                 if temp is not None:
                     return temp
 
-
-        #raise NotImplementedError()
+        # raise NotImplementedError()
